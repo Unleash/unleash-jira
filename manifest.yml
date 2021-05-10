@@ -2,7 +2,7 @@ modules:
   jira:issuePanel:
     - key: unleash-jira-hello-world-panel
       function: main
-      title: unleash-jira
+      title: Unleash Feature toggle
       icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
   function:
     - key: main
