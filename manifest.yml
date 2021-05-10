@@ -1,0 +1,12 @@
+modules:
+  jira:issuePanel:
+    - key: unleash-jira-hello-world-panel
+      function: main
+      title: unleash-jira
+      icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
+  function:
+    - key: main
+      handler: index.run
+app:
+  id: ari:cloud:ecosystem::app/aa1d5f9d-1880-4703-a3c9-24938ad6b08b
+  name: unleash-jira
