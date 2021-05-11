@@ -13,26 +13,29 @@ const UnleashToggleStatus = ({ issueKey, enabled }) => {
     );
 };
 
-const CreateToggle = ({ issueKey }) => (<Fragment>
+const CreateToggle = ({ issueKey, setFeature }) => (<Fragment>
     <Text>The feature toggle for {issueKey} does not exist.</Text>
-    <Button text={`Click to create toggle for ${issueKey}`} onClick={async () => await unleash.createFeatureToggle(issueKey)}/>
+    <Button text={`Click to create toggle for ${issueKey}`} onClick={async () => {
+        await unleash.createFeatureToggle(issueKey)
+        setFeature({ enabled: false, creatable: false, errors: false, found: true });
+    }}/>
 </Fragment>);
 
 const CannotCreateToggle = ({ issueKey }) => <Text>Can not create toggle for {issueKey}. A toggle already exists with
     that name</Text>;
 
-const CreatableToggle = ({ creatable, issueKey }) => {
+const CreatableToggle = ({ creatable, issueKey, setFeature }) => {
     return (<Fragment>{creatable
-        ? <CreateToggle issueKey={issueKey}/>
+        ? <CreateToggle issueKey={issueKey} setFeature={setFeature} />
         : <CannotCreateToggle issueKey={issueKey}/>}
             </Fragment>);
 };
 
-const UnleashToggle = ({ found, issueKey, enabled, creatable }) => {
+const UnleashToggle = ({ setFeature, found, issueKey, enabled, creatable }) => {
     return (<Fragment>
         {found
             ? <UnleashToggleStatus issueKey={issueKey} enabled={enabled}/>
-            : <CreatableToggle creatable={creatable} issueKey={issueKey}/>
+            : <CreatableToggle creatable={creatable} issueKey={issueKey} setFeature={setFeature}/>
             }
     </Fragment>);
 };
@@ -45,7 +48,7 @@ const FeatureToggleComponent = ({ issueKey }) => {
     console.info(feature)
     return (
         <Fragment>
-            {feature.errors ? <UnleashCommunicationFailure/> : <UnleashToggle found={feature.found} creatable={feature.creatable} issueKey={issueKey} enabled={feature.enabled} />}
+            {feature.errors ? <UnleashCommunicationFailure/> : <UnleashToggle setFeature={setFeature} found={feature.found} creatable={feature.creatable} issueKey={issueKey} enabled={feature.enabled} />}
         </Fragment>
     )
 }

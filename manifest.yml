@@ -2,7 +2,7 @@ modules:
   jira:issuePanel:
     - key: unleash-jira-panel
       function: main
-      title: Unleash Feature toggle
+      title: Unleash
       icon: https://homepage-frontend-unleash-team.vercel.app/logos/unleash_pos.svg
   function:
     - key: main
