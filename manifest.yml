@@ -1,12 +1,14 @@
 modules:
   jira:issuePanel:
-    - key: unleash-jira-hello-world-panel
+    - key: unleash-jira-panel
       function: main
       title: Unleash Feature toggle
-      icon: https://developer.atlassian.com/platform/forge/images/icons/issue-panel-icon.svg
+      icon: https://homepage-frontend-unleash-team.vercel.app/logos/unleash_pos.svg
   function:
     - key: main
       handler: index.run
 app:
   id: ari:cloud:ecosystem::app/aa1d5f9d-1880-4703-a3c9-24938ad6b08b
   name: unleash-jira
+permissions:
+  scopes: []

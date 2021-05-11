@@ -1,45 +1,67 @@
-import ForgeUI, { render, Fragment, Text, IssuePanel, useProductContext, useState } from '@forge/ui';
-import api from '@forge/api'; 
-import unleash from './api/unleash';
-import { unleashApiKey, unleashUrl } from './config';
+import ForgeUI, {render, Fragment, Text, IssuePanel, useProductContext, useState, Button, Image, Link} from '@forge/ui';
+import {unleash} from "./api/unleash";
 
-const NOT_FOUND = 404;
+
+const UnleashCommunicationFailure = () => <Text children="Could not reach Unleash API"/>;
+
+
+const UnleashToggleStatus = ({ issueKey, enabled }) => {
+    const featureUrl = `${process.env.UNLEASH_API_URL}/api/admin/features/${issueKey}`;
+    return (
+        <Text><Image src="something" alt={enabled ? 'enabled' : 'false'}></Image> - Feature toggle for <Link
+            href={featureUrl}>{issueKey}</Link> is {enabled ? 'enabled' : 'disabled'}</Text>
+    );
+};
+
+const CreateToggle = ({ issueKey }) => (<Fragment>
+    <Text>The feature toggle for {issueKey} does not exist.</Text>
+    <Button text={`Click to create toggle for ${issueKey}`} onClick={async () => await unleash.createFeatureToggle(issueKey)}/>
+</Fragment>);
+
+const CannotCreateToggle = ({ issueKey }) => <Text>Can not create toggle for {issueKey}. A toggle already exists with
+    that name</Text>;
+
+const CreatableToggle = ({ creatable, issueKey }) => {
+    return (<Fragment>{creatable
+        ? <CreateToggle issueKey={issueKey}/>
+        : <CannotCreateToggle issueKey={issueKey}/>}
+            </Fragment>);
+};
+
+const UnleashToggle = ({ found, issueKey, enabled, creatable }) => {
+    return (<Fragment>
+        {found
+            ? <UnleashToggleStatus issueKey={issueKey} enabled={enabled}/>
+            : <CreatableToggle creatable={creatable} issueKey={issueKey}/>
+            }
+    </Fragment>);
+};
 
 const FeatureToggleComponent = ({ issueKey }) => {
-  const [feature, setFeature] = useState(async () => {
-      const res = await api.fetch(`${unleashUrl}/api/client/features/${issueKey}`, { headers: { 'Authorization': unleashApiKey }});
-      if (res.ok) {
-        const data = await res.json();
-        if (data.enabled) {
-          return "Feature Toggle is enabled"
-        } else {
-          return "Feature Toggle is disabled";
-        }
-      } else if (res.status === NOT_FOUND) {
-          return "Could not find feature toggle";
-      } else {
-        return "Could not reach Unleash API";
-      }
-   });
-  return (
-    <Fragment>
-      <Text>{feature}</Text>
-    </Fragment>
-  )
+    const [feature, setFeature] = useState(async () => {
+        const data = await unleash.fetchFeatureToggle(issueKey);
+        return data;
+    });
+    console.info(feature)
+    return (
+        <Fragment>
+            {feature.errors ? <UnleashCommunicationFailure/> : <UnleashToggle found={feature.found} creatable={feature.creatable} issueKey={issueKey} enabled={feature.enabled} />}
+        </Fragment>
+    )
 }
 
 const App = () => {
-  const context = useProductContext();
-  const issueKey = context.platformContext.issueKey;
-  return (
-    <Fragment>
-       <FeatureToggleComponent issueKey={issueKey} />
-    </Fragment>
-  );
+    const context = useProductContext();
+    const issueKey = context.platformContext.issueKey;
+    return (
+        <Fragment>
+            <FeatureToggleComponent issueKey={issueKey}/>
+        </Fragment>
+    );
 };
 
 export const run = render(
-  <IssuePanel>
-    <App />
-  </IssuePanel>
+    <IssuePanel>
+        <App/>
+    </IssuePanel>
 );

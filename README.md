@@ -1,37 +1,31 @@
 # Forge Hello World
 
-This project contains a Forge app written in Javascript that displays `Hello World!` in a Jira issue panel. 
-
-See [developer.atlassian.com/platform/forge/](https://developer.atlassian.com/platform/forge) for documentation and tutorials explaining Forge.
+This project contains a Forge app written in Javascript that allows you to communicate with the [Unleash feature toggle system](https://getunleash.ai) in a Jira Issue panel.
 
 ## Requirements
 
-See [Set up Forge](https://developer.atlassian.com/platform/forge/set-up-forge/) for instructions to get set up.
+- Node v12
+
+- See [Set up Forge](https://developer.atlassian.com/platform/forge/set-up-forge/) for instructions to get set up.
+
 
 ## Quick start
 
-- Modify your app by editing the `src/index.jsx` file.
+- Tell the app where to find your unleash installation by using Forge variables
+  - `forge variables:set -e production UNLEASH_API_URL YOUR_UNLEASH_URL`
 
-- Build and deploy your app by running:
-```
-forge deploy
-```
+- [Set up an API user in unleash](https://docs.getunleash.io/user-management)
 
-- Install your app in an Atlassian site by running:
-```
-forge install
-```
+- Copy API key from unleash and set an encrypted variable for Forge.
+  - `forge variables:set -e production --encrypted UNLEASH_API_KEY YOUR_API_KEY`
 
-- Develop your app by running `forge tunnel` to proxy invocations locally:
+- Install your app in your Atlassian site by running:
 ```
-forge tunnel
+forge install -e production
 ```
-
-### Notes
-- Use the `forge deploy` command when you want to persist code changes.
-- Use the `forge install` command when you want to install the app on a new site.
-- Once the app is installed on a site, the site picks up the new app changes you deploy without needing to rerun the install command.
+- This will prompt you for the URL to your atlassian installation and install the application in production mode.
 
 ## Support
 
-See [Get help](https://developer.atlassian.com/platform/forge/get-help/) for how to get help and provide feedback.
+- For problems with Forge see [Get help](https://developer.atlassian.com/platform/forge/get-help/) for how to get help and provide feedback.
+- For problems with this plugin visit our [Slack community](https://join.slack.com/t/unleash-community/shared_invite/zt-8b6l1uut-LL67kLpIXm9bcN3~6RVaRQ)
