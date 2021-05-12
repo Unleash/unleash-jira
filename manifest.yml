@@ -3,7 +3,7 @@ modules:
     - key: unleash-jira-panel
       function: main
       title: Unleash
-      icon: https://homepage-frontend-unleash-team.vercel.app/logos/unleash_pos.svg
+      icon: https://homepage-frontend-unleash-team.vercel.app/logos/unleash_glyph_pos.svg
   function:
     - key: main
       handler: index.run
