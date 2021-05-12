@@ -11,4 +11,5 @@ app:
   id: ari:cloud:ecosystem::app/aa1d5f9d-1880-4703-a3c9-24938ad6b08b
   name: unleash-jira
 permissions:
-  scopes: []
+  scopes:
+    - 'storage:app'

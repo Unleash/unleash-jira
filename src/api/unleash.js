@@ -13,6 +13,10 @@ const getCreateUrl = () => getApiUrl('/api/admin/features');
 
 const getArchiveUrl = (issueKey) => `${getApiUrl('/api/admin/archive/features')}/${issueKey}`;
 
+const getProjectUrl = () => getApiUrl('/api/admin/projects');
+
+const bootstrapUrl = () => getApiUrl('/api/admin/ui-bootstrap');
+
 const getApiKey = () => {
     return process.env.UNLEASH_API_KEY;
 }
@@ -43,14 +47,16 @@ const fetchFeatureToggle = async (issueKey) => {
     }
 }
 
-const createFeatureToggle = async (issueKey) => {
+const createFeatureToggle = async (toggleData) => {
     const unleashApiKey = getApiKey();
     const featureRequest = {
-        name: issueKey,
-        enabled: false,
+        name: toggleData.name,
+        enabled: toggleData.enabled || false,
+        project: toggleData.project || 'default',
+        description: toggleData.description,
         strategies: [{ name: 'default' }]
     };
-    console.info(`Creating feature toggle ${issueKey}`);
+    console.info(`Creating feature toggle ${toggleData.name}`);
     const data = await api.fetch(getCreateUrl(), {
         headers: { 'Authorization': unleashApiKey },
         body: JSON.stringify(featureRequest),
@@ -59,7 +65,40 @@ const createFeatureToggle = async (issueKey) => {
     return data.ok;
 }
 
+const fetchProjects = async () => {
+    const unleashApiKey = getApiKey();
+    const data= await api.fetch(getProjectUrl(), {
+        headers: { 'Authorization': unleashApiKey },
+    });
+    if (data.ok) {
+        const json = await data.json()
+        return json.projects.map(p => {
+            return {
+                id: p.id,
+                name: p.name
+            };
+        });
+    }
+    return []
+}
+
+const fetchUiBootstrap = async () => {
+    const unleashApiKey = getApiKey();
+    const data = await api.fetch(bootstrapUrl(), {
+        headers: { 'Authorization': unleashApiKey },
+    });
+    if (data.ok) {
+        const json = await data.json();
+        return {
+            featureTypes: json.featureTypes,
+            projects: json.projects,
+        }
+    }
+}
+
 export const unleash = {
     fetchFeatureToggle,
-    createFeatureToggle
+    createFeatureToggle,
+    fetchProjects,
+    fetchUiBootstrap
 };
