@@ -4,7 +4,7 @@ const NOT_FOUND = 404;
 
 const getApiUrl = (subpath) => `${process.env.UNLEASH_API_URL}${subpath}`;
 const getToggleUrl = (issueKey) => {
-    const url = `${getApiUrl('/api/client/features')}/${issueKey}`;
+    const url = `${getApiUrl('/api/admin/features')}/${issueKey}`;
     console.info(url);
     return url;
 }

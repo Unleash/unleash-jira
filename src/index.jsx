@@ -1,12 +1,13 @@
+import API from '@forge/api';
 import ForgeUI, {render, Fragment, Text, IssuePanel, useProductContext, useState, Button, Image, Link} from '@forge/ui';
 import {unleash} from "./api/unleash";
 
 
-const UnleashCommunicationFailure = () => <Text children="Could not reach Unleash API"/>;
+const UnleashCommunicationFailure = () => <Text>Could not reach Unleash API</Text>;
 
 
 const UnleashToggleStatus = ({ issueKey, enabled }) => {
-    const featureUrl = `${process.env.UNLEASH_API_URL}/api/admin/features/${issueKey}`;
+    const featureUrl = `${process.env.UNLEASH_API_URL}/features/strategies/${issueKey}`;
     return (
         <Text><Image src="something" alt={enabled ? 'enabled' : 'false'}></Image> - Feature toggle for <Link
             href={featureUrl}>{issueKey}</Link> is {enabled ? 'enabled' : 'disabled'}</Text>
