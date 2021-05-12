@@ -50,7 +50,7 @@ const CreateToggle = ({ uiConfig, issueKey, setFeature }) => {
                     <Option label={name} value={id} defaultSelected={id === 'release'} />
                 )}
             </Select>
-            <Toggle label="Feature enabled" name="enabled" defaultChecked={false}/>
+            <Toggle label="Enable feature" name="enabled" defaultChecked={false}/>
             <TextField label="Toggle name" name="name" isRequired={true}/>
             <TextArea label="Toggle description" name="description"/>
         </Form>
