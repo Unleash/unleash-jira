@@ -1,38 +1,47 @@
-import api from '@forge/api';
+import api, {storage} from '@forge/api';
 
 const NOT_FOUND = 404;
 
-const getApiUrl = (subpath) => `${process.env.UNLEASH_API_URL}${subpath}`;
-const getToggleUrl = (issueKey) => {
-    const url = `${getApiUrl('/api/admin/features')}/${issueKey}`;
-    console.info(url);
-    return url;
+const API_URL_STORAGE_KEY = 'unleash_api_url';
+const API_KEY_STORAGE_KEY = 'unleash_api_key';
+
+const getApi = async () => {
+    return await storage.get(API_URL_STORAGE_KEY);
 }
 
-const getCreateUrl = () => getApiUrl('/api/admin/features');
-
-const getArchiveUrl = (issueKey) => `${getApiUrl('/api/admin/archive/features')}/${issueKey}`;
-
-const getProjectUrl = () => getApiUrl('/api/admin/projects');
-
-const bootstrapUrl = () => getApiUrl('/api/admin/ui-bootstrap');
-
-const getApiKey = () => {
-    return process.env.UNLEASH_API_KEY;
+const getApiUrl = async (subpath) => `${await getApi()}${subpath}`;
+const getToggleUrl = async (toggleName) => {
+    return `${await getApiUrl('/api/admin/features')}/${toggleName}`;
 }
 
-const getAuth = () => {
-    const apiKey = getApiKey();
+const getFrontendFeatureUrl = async (toggleName) => {
+    return await getApiUrl(`/features/strategies/${toggleName}`);
+}
+
+const getCreateUrl = async () => await getApiUrl('/api/admin/features');
+
+const getArchiveUrl = async (issueKey) => `${await getApiUrl('/api/admin/archive/features')}/${issueKey}`;
+
+const getProjectUrl = async () => await getApiUrl('/api/admin/projects');
+
+const bootstrapUrl = async () => await getApiUrl('/api/admin/ui-bootstrap');
+
+const getApiKey = async () => {
+    return await storage.get(API_KEY_STORAGE_KEY);
+}
+
+const getAuth = async () => {
+    const apiKey = await getApiKey();
     return { headers: { 'Authorization': apiKey }};
 }
 
 const getArchivedToggle = async (issueKey) => {
-    const archived = await api.fetch(getArchiveUrl(issueKey), getAuth());
+    const archived = await api.fetch(await getArchiveUrl(issueKey), await getAuth());
     return archived.ok;
 }
 
 const fetchFeatureToggle = async (issueKey) => {
-    const res = await api.fetch(getToggleUrl(issueKey), getAuth());
+    const res = await api.fetch(await getToggleUrl(issueKey), await getAuth());
     if (res.ok) {
         console.info('Successfully fetched toggle');
         const data = await res.json();
@@ -48,7 +57,7 @@ const fetchFeatureToggle = async (issueKey) => {
 }
 
 const createFeatureToggle = async (toggleData) => {
-    const unleashApiKey = getApiKey();
+    const unleashApiKey = await getApiKey();
     const featureRequest = {
         name: toggleData.name,
         enabled: toggleData.enabled || false,
@@ -57,7 +66,7 @@ const createFeatureToggle = async (toggleData) => {
         strategies: [{ name: 'default' }]
     };
     console.info(`Creating feature toggle ${toggleData.name}`);
-    const data = await api.fetch(getCreateUrl(), {
+    const data = await api.fetch(await getCreateUrl(), {
         headers: { 'Authorization': unleashApiKey },
         body: JSON.stringify(featureRequest),
         method: 'POST'
@@ -66,8 +75,8 @@ const createFeatureToggle = async (toggleData) => {
 }
 
 const fetchProjects = async () => {
-    const unleashApiKey = getApiKey();
-    const data= await api.fetch(getProjectUrl(), {
+    const unleashApiKey = await getApiKey();
+    const data= await api.fetch(await getProjectUrl(), {
         headers: { 'Authorization': unleashApiKey },
     });
     if (data.ok) {
@@ -83,8 +92,8 @@ const fetchProjects = async () => {
 }
 
 const fetchUiBootstrap = async () => {
-    const unleashApiKey = getApiKey();
-    const data = await api.fetch(bootstrapUrl(), {
+    const unleashApiKey = await getApiKey();
+    const data = await api.fetch(await bootstrapUrl(), {
         headers: { 'Authorization': unleashApiKey },
     });
     if (data.ok) {
@@ -100,5 +109,11 @@ export const unleash = {
     fetchFeatureToggle,
     createFeatureToggle,
     fetchProjects,
-    fetchUiBootstrap
+    fetchUiBootstrap,
+    getApi,
+    getApiUrl,
+    getApiKey,
+    getFrontendFeatureUrl,
+    API_KEY_STORAGE_KEY,
+    API_URL_STORAGE_KEY
 };

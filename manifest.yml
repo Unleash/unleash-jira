@@ -3,10 +3,17 @@ modules:
     - key: unleash-jira-panel
       function: main
       title: Unleash
-      icon: https://homepage-frontend-unleash-team.vercel.app/logos/unleash_glyph_pos.svg
+      icon: https://www.getunleash.io/logos/unleash_glyph_pos.svg
   function:
     - key: main
       handler: index.run
+    - key: admin
+      handler: admin.run
+  jira:adminPage:
+    - key: unleash-jira-admin
+      function: admin
+      title: Unleash Admin
+      icon: https://www.getunleash.io/logos/unleash_glyph_pos.svg
 app:
   id: ari:cloud:ecosystem::app/aa1d5f9d-1880-4703-a3c9-24938ad6b08b
   name: unleash-jira

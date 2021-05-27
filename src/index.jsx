@@ -1,5 +1,4 @@
 import ForgeUI, {
-    Button,
     Form,
     Fragment,
     IssuePanel,
@@ -15,18 +14,20 @@ import ForgeUI, {
     useState
 } from '@forge/ui';
 import { storage } from '@forge/api';
-import {unleash} from "./api/unleash";
+import { unleash } from "./api/unleash";
 
 
 const UnleashCommunicationFailure = () => <Text>Could not reach Unleash API</Text>;
 
 
 const UnleashToggleStatus = ({ issueKey, toggleName, enabled }) => {
-    const featureUrl = `${process.env.UNLEASH_API_URL}/features/strategies/${toggleName}`;
+    const [featureUrl, setFeatureUrl] = useState(async () => {
+        return await unleash.getFrontendFeatureUrl(toggleName);
+    })
     return (
         <Fragment>
             <Text>
-                <Link href={featureUrl}>Feature toggle for {issueKey}</Link> with name {toggleName} is {enabled ? 'enabled' : 'disabled'}
+                <Link href={featureUrl}>{toggleName}</Link> is {enabled ? 'enabled' : 'disabled'}
             </Text>
         </Fragment>
     );
@@ -38,7 +39,7 @@ const CreateToggle = ({ uiConfig, issueKey, setFeature }) => {
         <Form onSubmit={async (formData) => {
             await storage.set(`unleash_toggle_${issueKey}`, formData.name);
             await unleash.createFeatureToggle(formData);
-            setFeature({ creatable: false, enabled: formData.enabled, found: true, errors: false });
+            setFeature({ creatable: false, enabled: formData.enabled, found: true, name: formData.name, errors: false });
         }} submitButtonText="Create feature toggle">
             <Select label="Project" name="project" isRequired={true}>
                 {uiConfig.projects.map(({ id, name }) =>
@@ -86,7 +87,7 @@ const FeatureToggleComponent = ({ issueKey, toggleName }) => {
     return (
         <Fragment>
             {feature.errors ? <UnleashCommunicationFailure/> :
-                <UnleashToggle toggleName={toggleName}
+                <UnleashToggle toggleName={feature.name || toggleName}
                                uiConfig={uiConfig}
                                setFeature={setFeature}
                                found={feature.found}
@@ -104,12 +105,15 @@ const App = () => {
     const [toggleName, setToggleName] = useState(async () => {
         return await storage.get(`unleash_toggle_${issueKey}`);
     })
-    console.info(toggleName);
-    return (
-        <Fragment>
-            <FeatureToggleComponent toggleName={toggleName || issueKey} issueKey={issueKey}/>
-        </Fragment>
-    );
+    const [apiUrl, _setApiUrl] = useState(async () => {
+        return await unleash.getApi();
+    })
+
+    return <Fragment>
+            {apiUrl ?
+            <FeatureToggleComponent toggleName={toggleName} issueKey={issueKey}/>
+                : <Text>You need to configure Unleash using the app's admin page</Text>}
+        </Fragment>;
 };
 
 export const run = render(
