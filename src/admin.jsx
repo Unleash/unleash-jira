@@ -8,7 +8,7 @@ const App = () => {
     });
     const [apiKey, setApiKey] = useState(async () => {
         return await unleash.getApiKey();
-    })
+    });
     return (
         <AdminPage>
             <Text>Configure your Unleash installation</Text>

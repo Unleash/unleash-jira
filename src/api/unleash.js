@@ -4,6 +4,7 @@ const NOT_FOUND = 404;
 
 const API_URL_STORAGE_KEY = 'unleash_api_url';
 const API_KEY_STORAGE_KEY = 'unleash_api_key';
+const CUSTOM_FIELD_STORAGE_KEY = 'unleash_custom_field';
 
 const getApi = async () => {
     return await storage.get(API_URL_STORAGE_KEY);
@@ -33,6 +34,14 @@ const getApiKey = async () => {
 const getAuth = async () => {
     const apiKey = await getApiKey();
     return { headers: { 'Authorization': apiKey }};
+}
+
+const getCustomField = async () => {
+    return await storage.get(CUSTOM_FIELD_STORAGE_KEY);
+}
+
+const saveCustomField = async (fieldId) => {
+    await storage.set(CUSTOM_FIELD_STORAGE_KEY, fieldId);
 }
 
 const getArchivedToggle = async (issueKey) => {
@@ -113,7 +122,10 @@ export const unleash = {
     getApi,
     getApiUrl,
     getApiKey,
+    getCustomField,
+    saveCustomField,
     getFrontendFeatureUrl,
     API_KEY_STORAGE_KEY,
-    API_URL_STORAGE_KEY
+    API_URL_STORAGE_KEY,
+    CUSTOM_FIELD_STORAGE_KEY,
 };

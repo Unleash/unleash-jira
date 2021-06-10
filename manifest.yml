@@ -9,14 +9,38 @@ modules:
       handler: index.run
     - key: admin
       handler: admin.run
+    - key: on-issue-update
+      handler: customfield.issueUpdate
+    - key: get-field-id
+      handler: customfield.getFieldId
   jira:adminPage:
     - key: unleash-jira-admin
       function: admin
       title: Unleash Admin
       icon: https://www.getunleash.io/logos/unleash_glyph_pos.svg
+  jira:customField:
+    - key: unleash-jira-toggle
+      name: unleash-toggles
+      description: Status of unleash toggles connected to this issue
+      type: string
+      collection: list
+      read-only: true
+      icon: https://www.getunleash.io/logos/unleash_glyph_pos.svg
+  trigger:
+    - key: unleash-toggle-on-issue-update
+      function: on-issue-update
+      events:
+        - avi:jira:updated:issue
+    - key: unleash-custom-field-on-issue-create
+      function: get-field-id
+      events:
+        - avi:jira:created:issue
+
 app:
   id: ari:cloud:ecosystem::app/aa1d5f9d-1880-4703-a3c9-24938ad6b08b
   name: unleash-jira
 permissions:
   scopes:
     - 'storage:app'
+    - 'write:jira-work'
+    - 'read:jira-work'
