@@ -1,7 +1,7 @@
 modules:
   jira:issuePanel:
     - key: unleash-jira-panel
-      function: main
+      resource: main
       title: Unleash
       icon: https://www.getunleash.io/logos/unleash_glyph_pos.svg
   function:
@@ -44,3 +44,6 @@ permissions:
     - 'storage:app'
     - 'write:jira-work'
     - 'read:jira-work'
+resources:
+  - key: main
+    path: static/cra-jira/build
