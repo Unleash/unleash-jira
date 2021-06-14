@@ -1,4 +1,5 @@
 import ForgeUI, {
+    Badge,
     Form,
     Fragment,
     IssuePanel,
@@ -27,7 +28,7 @@ const UnleashToggleStatus = ({ issueKey, toggleName, enabled }) => {
     return (
         <Fragment>
             <Text>
-                <Link href={featureUrl}>{toggleName}</Link> is {enabled ? 'enabled' : 'disabled'}
+                <Link href={featureUrl}>{toggleName}</Link> is {enabled ? <Badge text='enabled' appearance='added'/> : <Badge text ='disabled' appearance='removed' /> }
             </Text>
         </Fragment>
     );

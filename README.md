@@ -11,14 +11,6 @@ This project contains a Forge app written in Javascript that allows you to commu
 
 ## Quick start
 
-- Tell the app where to find your unleash installation by using Forge variables
-  - `forge variables:set -e production UNLEASH_API_URL YOUR_UNLEASH_URL`
-
-- [Set up an API user in unleash](https://docs.getunleash.io/user-management)
-
-- Copy API key from unleash and set an encrypted variable for Forge.
-  - `forge variables:set -e production --encrypted UNLEASH_API_KEY YOUR_API_KEY`
-
 - Install your app in your Atlassian site by running:
 ```
 forge install -e production
