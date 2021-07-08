@@ -2,11 +2,13 @@ modules:
   jira:issuePanel:
     - key: unleash-jira-panel
       resource: main
+      resolver:
+        function: resolver
       title: Unleash
       icon: https://www.getunleash.io/logos/unleash_glyph_pos.svg
   function:
-    - key: main
-      handler: index.run
+    - key: resolver
+      handler: index.handler
     - key: admin
       handler: admin.run
     - key: on-issue-update
