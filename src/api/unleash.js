@@ -10,6 +10,11 @@ const getApi = async () => {
   return await storage.get(API_URL_STORAGE_KEY);
 };
 
+const getToggleName = async (context) => {
+  const issueKey = context.extension.issue.key;
+  return await storage.get(`unleash_toggle_${issueKey}`);
+};
+
 const getApiUrl = async (subpath) => `${await getApi()}${subpath}`;
 const getToggleUrl = async (toggleName) => {
   return `${await getApiUrl('/api/admin/features')}/${toggleName}`;
@@ -36,6 +41,11 @@ const getApiKey = async () => {
 const getAuth = async () => {
   const apiKey = await getApiKey();
   return { headers: { Authorization: apiKey } };
+};
+
+const getIssueKey = async (context) => {
+  const issueKey = context.extension.issue.key;
+  return issueKey;
 };
 
 const getCustomField = async () => {
@@ -132,9 +142,11 @@ export const unleash = {
   createFeatureToggle,
   fetchProjects,
   fetchUiBootstrap,
+  getToggleName,
   getApi,
   getApiUrl,
   getApiKey,
+  getIssueKey,
   getCustomField,
   saveCustomField,
   getFrontendFeatureUrl,

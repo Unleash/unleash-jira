@@ -1,10 +1,21 @@
+import { invoke } from '@forge/bridge';
 import { useEffect, useState } from 'react';
 import ConditionallyRender from 'react-conditionally-render';
-import { unleash } from '../../api';
-
 interface IFeatureTogglePanelProps {
   toggleName: string;
   issueKey: string;
+}
+
+interface IUiConfig {
+  featureTypes: any;
+  projects: any;
+}
+
+interface IFeatureToggle {
+  enabled: boolean;
+  found: boolean;
+  errors: boolean;
+  archived: boolean;
 }
 
 const FeatureTogglePanel = ({
@@ -15,13 +26,11 @@ const FeatureTogglePanel = ({
   const [feature, setFeature] = useState({ errors: true });
 
   useEffect(() => {
-    // const getData = async () => {
-    //   const uiConfig = await unleash.fetchUiBootstrap();
-    //   const feature = await unleash.fetchFeatureToggle(toggleName);
-    //   setUiConfig(uiConfig || {});
-    //   setFeature(feature);
-    // };
-    // getData();
+    const getData = async () => {
+      await invoke<IUiConfig>('fetchUiConfig').then(setUiConfig);
+      await invoke<IFeatureToggle>('fetchFeatureToggle').then(setFeature);
+    };
+    getData();
   }, []);
 
   console.log('UICONFIG', uiConfig);

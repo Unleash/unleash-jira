@@ -1,34 +1,54 @@
 import { storage } from '@forge/api';
 import Resolver from '@forge/resolver';
 
-const API_URL_STORAGE_KEY = 'unleash_api_url';
+import { unleash } from './api/unleash';
 
 const resolver = new Resolver();
 
-const getApi = async () => {
-  return await storage.get(API_URL_STORAGE_KEY);
-};
-
 resolver.define('getApi', () => {
-  return getApi();
+  return unleash.getApi();
 });
-
-const getToggleName = async (context) => {
-  const issueKey = context.extension.issue.key;
-  return await storage.get(`unleash_toggle_${issueKey}`);
-};
 
 resolver.define('getToggleName', ({ context }) => {
-  return getToggleName(context);
+  return unleash.getToggleName(context);
 });
-
-const getIssueKey = async (context) => {
-  const issueKey = context.extension.issue.key;
-  return issueKey;
-};
 
 resolver.define('getIssueKey', ({ context }) => {
-  return getIssueKey(context);
+  return unleash.getIssueKey(context);
 });
+
+resolver.define('fetchUiConfig', () => {
+  return unleash.fetchUiBootstrap();
+});
+
+resolver.define('fetchFeatureToggle', ({ payload }) => {
+  const { toggleName } = payload;
+  return unleash.fetchFeatureToggle(toggleName);
+});
+
+// const fetchUiBootstrap = async () => {
+//   const unleashApiKey = await getApiKey();
+//   const data = await fetch(await bootstrapUrl(), getAuth());
+
+//   if (data.ok) {
+//     const json = await data.json();
+//     return {
+//       featureTypes: json.featureTypes,
+//       projects: json.projects,
+//     };
+//   }
+// };
+
+// const getApiKey = async () => {
+//   return await storage.get(API_KEY_STORAGE_KEY);
+// };
+
+// const getAuth = async () => {
+//   const apiKey = await getApiKey();
+//   return { headers: { Authorization: apiKey } };
+// };
+
+// const bootstrapUrl = async () =>
+//   await getApiUrl('/api/admin/ui-bootstrap');
 
 export const handler = resolver.getDefinitions();
