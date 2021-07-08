@@ -65,27 +65,30 @@ const getArchivedToggle = async (issueKey) => {
 };
 
 const fetchFeatureToggle = async (issueKey) => {
-  const res = await api.fetch(
-    await getToggleUrl(issueKey),
-    await getAuth()
-  );
-  if (res.ok) {
-    console.info('Successfully fetched toggle');
-    const data = await res.json();
-    return { enabled: data.enabled, errors: false, found: true };
-  } else if (res.status === NOT_FOUND) {
-    console.info('404ed, check archived');
-    const archived = await getArchivedToggle(issueKey);
-    return {
-      enabled: false,
-      found: false,
-      errors: false,
-      archived: archived.ok,
-    };
-  } else {
-    console.info(`Errored ${res.status}`);
-    return { enabled: false, found: false, errors: true };
+  if (issueKey) {
+    const res = await api.fetch(
+        await getToggleUrl(issueKey),
+        await getAuth()
+    );
+    if (res.ok) {
+      console.info('Successfully fetched toggle');
+      const data = await res.json();
+      return { enabled: data.enabled, errors: false, found: true };
+    } else if (res.status === NOT_FOUND) {
+      console.info('404ed, check archived');
+      const archived = await getArchivedToggle(issueKey);
+      return {
+        enabled: false,
+        found: false,
+        errors: false,
+        archived: archived.ok,
+      };
+    } else {
+      console.info(`Errored ${res.status}`);
+      return { enabled: false, found: false, errors: true };
+    }
   }
+  return { enabled: false, found: false, errors: true };
 };
 
 const createFeatureToggle = async (toggleData) => {

@@ -46,6 +46,10 @@ permissions:
     - 'storage:app'
     - 'write:jira-work'
     - 'read:jira-work'
+  external:
+    fetch:
+      backend:
+        - "*"
 resources:
   - key: main
     path: static/cra-jira/build
