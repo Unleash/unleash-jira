@@ -59,7 +59,6 @@ const ConnectToggleActions = ({
           <LinkExistingToggle
             uiConfig={uiConfig}
             issueKey={issueKey}
-            toggleName={toggleName}
             setFeature={setFeature}
           />
         }

@@ -69,8 +69,8 @@ const getArchivedToggle = async (issueKey) => {
 const fetchFeatureToggle = async (issueKey) => {
   if (issueKey) {
     const res = await api.fetch(
-        await getToggleUrl(issueKey),
-        await getAuth()
+      await getToggleUrl(issueKey),
+      await getAuth()
     );
     if (res.ok) {
       console.info('Successfully fetched toggle');
@@ -149,11 +149,9 @@ const fetchFeatureNames = async () => {
   });
   if (data.ok) {
     const json = await data.json();
-    return {
-      featureNames: json.features.map(feature => feature.name)
-    };
+    return json.features.map((feature) => feature.name);
   }
-}
+};
 
 export const unleash = {
   fetchFeatureToggle,
