@@ -22,25 +22,24 @@ resolver.define('fetchUiConfig', () => {
 });
 
 resolver.define('fetchFeatureToggle', ({ payload }) => {
-  console.log(payload)
+  console.log(payload);
   const { toggleName } = payload;
   return unleash.fetchFeatureToggle(toggleName);
 });
 
 resolver.define('fetchFeatureNames', () => {
   return unleash.fetchFeatureNames();
-})
-
+});
 
 resolver.define('getFrontendFeatureUrl', ({ payload }) => {
   const { toggleName } = payload;
   return unleash.getFrontendFeatureUrl(toggleName);
-})
+});
 
 resolver.define('createFeatureToggle', ({ payload }) => {
-  console.log(payload);
-  //return unleash.createFeatureToggle(payload);
-})
+  const { toggleData } = payload;
+  return unleash.createFeatureToggle(toggleData);
+});
 // const fetchUiBootstrap = async () => {
 //   const unleashApiKey = await getApiKey();
 //   const data = await fetch(await bootstrapUrl(), getAuth());
