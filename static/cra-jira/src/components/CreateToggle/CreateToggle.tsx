@@ -44,12 +44,15 @@ const CreateToggle = ({
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    try {
-      invoke('createFeatureToggle', { toggleData: formData });
-      toggleCreateModal();
-    } catch (e) {
-      console.log(e);
-    }
+
+    invoke('createFeatureToggle', { toggleData: formData })
+      .then((data) => {
+        console.log(data);
+        toggleCreateModal();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   return (
