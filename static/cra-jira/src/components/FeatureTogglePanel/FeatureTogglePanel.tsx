@@ -30,7 +30,7 @@ const FeatureTogglePanel = ({
                                 issueKey,
                             }: IFeatureTogglePanelProps) => {
     const [uiConfig, setUiConfig] = useState<IUiConfig>({ featureTypes: [], projects: [] });
-    const [feature, setFeature] = useState<IFeatureToggle>({enabled: false, found: false, archived: false, errors: true});
+    const [feature, setFeature] = useState<IFeatureToggle>({enabled: false, found: false, archived: false, errors: false});
 
     useEffect(() => {
         const getData = async () => {

@@ -1,7 +1,6 @@
 import { IFeatureToggle, IUiConfig } from "../FeatureTogglePanel/FeatureTogglePanel";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import Form from "@atlaskit/form";
-import { invoke } from "@forge/bridge";
 import Select from '@atlaskit/select';
 import Toggle from "@atlaskit/toggle";
 import Textfield from '@atlaskit/textfield';
@@ -14,27 +13,44 @@ export interface CreateToggleProps {
 }
 
 const CreateToggle = ({uiConfig, issueKey, setFeature}: CreateToggleProps) => {
+    const [formData, setFormData] = useState({ enabled: false, project: {label: 'Default', value: 'default' }, type: { label: 'Release', value: 'release' }, name: '', description: ''});
     const projects = uiConfig.projects.map(project => ({label: project.name, value: project.id}));
     const featureTypes = uiConfig.featureTypes.map(featureType => ({label: featureType.name, value: featureType.id}))
     return (<>
-        <p>The feature toggle for {issueKey} does not exist.</p>
-        <Form onSubmit={(values, form, callback) => {
-            console.log(values);
-            invoke('createFeatureToggle', {payload: { values }})
-        }}>
-            {({formProps, dirty, submitting}) => (
-                <form {...formProps}>
-                    <Select placeholder='Feature type' name='project' options={projects} />
-                    <Select placeholder={'Toggle type'} name='type' options={featureTypes} />
-                    <label for='enabled'>Enable/Disable toggle</label>
-                    <Toggle label='Enable feature' name='enabled' defaultChecked={false}/>
-                    <Textfield label='Toggle name' name='name' isRequired={true} />
-                    <TextArea name='description' placeholder={`If you'd like to add a description do so here`}/>
-                    <input type='submit' value='Create toggle' />
-                </form>
-            )}
-        </Form>
-    </>);
+    <p>The feature toggle for {issueKey} does not exist.</p>
+    <form onSubmit={(event) => {
+        event.preventDefault();
+        console.log(formData);
+    }}>
+        <Select placeholder='Feature type' name='project' options={projects} value={formData.project} onChange={(selectData) => {
+            if (selectData) {
+                setFormData({...formData, project: selectData})
+            }
+        }}/>
+        <Select placeholder={'Toggle type'} name='type' options={featureTypes} value={formData.type}
+                onChange={(selectData) => {
+                    if (selectData) {
+                        setFormData({...formData, type: selectData})
+                    }
+        }
+        }/>
+        <label for='enabled'>Enable/Disable toggle</label>
+        <Toggle label='Enable feature' name='enabled' isChecked={formData.enabled} onChange={(toggleData) => {
+            setFormData({...formData, enabled: toggleData.target.checked})
+        }}
+        />
+        <Textfield label='Toggle name' name='name' isRequired={true} onChange={(nameChange) => {
+            setFormData({...formData, name: nameChange.currentTarget.value })
+        }
+        }/>
+        <TextArea name='description' placeholder={`If you'd like to add a description do so here`} onChange={(descriptionChange) => {
+            setFormData({ ...formData, description: descriptionChange.target.value })
+        }
+        }/>
+        <input type='submit' value='Create toggle'/>
+    </form>
+</>)
+    ;
 };
 
 export default CreateToggle;
