@@ -1,11 +1,7 @@
-import {
-  IFeatureToggle,
-  IUiConfig,
-} from '../FeatureTogglePanel/FeatureTogglePanel';
+import { IFeatureToggle, IUiConfig, } from '../FeatureTogglePanel/FeatureTogglePanel';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import Textfield from '@atlaskit/textfield';
 import { invoke } from '@forge/bridge';
-import { PopupSelect } from '@atlaskit/select';
+import Select from '@atlaskit/select';
 
 export interface LinkExistingToggleProps {
   uiConfig: IUiConfig;
@@ -34,35 +30,21 @@ const LinkExistingToggle = ({
     };
     getData();
   });
-
-  return (
-    <>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log(toggleName);
-        }}
-      >
-        <PopupSelect
-          options={featureNames.map((name) => ({
-            label: name,
-            value: name,
-          }))}
-          target={({ isOpen, ...triggerProps }) => (
-            <button {...triggerProps}>Select existing toggle</button>
-          )}
-          value={{ label: toggleName, value: toggleName }}
-          onChange={(v) => {
-            if (v) {
-              setToggleName(v.value);
-            }
-          }}
-          searchThreshold={5}
-        />
-        <input type='submit' value='Link toggle' />
-      </form>
-    </>
-  );
+    return (<>
+        <form onSubmit={(e) => {
+            e.preventDefault();
+            console.log(toggleName);
+        }}>
+            <Select
+                options={featureNames.map(name => ({ label: name, value: name }))}
+                value={({ label: toggleName, value: toggleName })}
+                onChange={(v) => {
+                    if (v) { setToggleName(v.value) }
+                }}
+                searchThreshold={5}
+            />
+        </form>
+    </>);
 };
 
 export default LinkExistingToggle;
