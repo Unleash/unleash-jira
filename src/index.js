@@ -13,6 +13,10 @@ resolver.define('getToggleName', ({ context }) => {
   return unleash.getToggleName(context);
 });
 
+resolver.define('setToggleName', ({ context, payload }) => {
+  return unleash.saveToggleName(context, payload.toggleName);
+})
+
 resolver.define('getIssueKey', ({ context }) => {
   return unleash.getIssueKey(context);
 });

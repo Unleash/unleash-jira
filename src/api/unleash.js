@@ -45,14 +45,19 @@ const getAuth = async () => {
   return { headers: { Authorization: apiKey } };
 };
 
-const getIssueKey = async (context) => {
-  const issueKey = context.extension.issue.key;
-  return issueKey;
+const getIssueKey = (context) => {
+  return context.extension.issue.key;
 };
 
 const getCustomField = async () => {
   return await storage.get(CUSTOM_FIELD_STORAGE_KEY);
 };
+
+const saveToggleName = async (context, name) => {
+  const issueKey = getIssueKey(context);
+  console.log(`Saving to unleash_toggle_${issueKey} the name: ${name}`)
+  return await storage.set(`unleash_toggle_${issueKey}`, name);
+}
 
 const saveCustomField = async (fieldId) => {
   await storage.set(CUSTOM_FIELD_STORAGE_KEY, fieldId);
@@ -98,17 +103,22 @@ const createFeatureToggle = async (toggleData) => {
   const featureRequest = {
     name: toggleData.name,
     enabled: toggleData.enabled || false,
-    project: toggleData.project || 'default',
+    project: toggleData.project.value || 'default',
     description: toggleData.description,
+    type: toggleData.type.value || 'release',
     strategies: [{ name: 'default' }],
   };
-  console.info(`Creating feature toggle ${toggleData.name}`);
+  console.info(`Creating feature toggle `, featureRequest);
   const data = await api.fetch(await getCreateUrl(), {
     headers: { Authorization: unleashApiKey },
     body: JSON.stringify(featureRequest),
     method: 'POST',
   });
-  return data.ok;
+  if (data.ok) {
+    return data.json();
+  } else {
+    throw new Error(`Failed with ${data.statusText}`);
+  }
 };
 
 const fetchProjects = async () => {
@@ -166,6 +176,7 @@ export const unleash = {
   getCustomField,
   saveCustomField,
   getFrontendFeatureUrl,
+  saveToggleName,
   API_KEY_STORAGE_KEY,
   API_URL_STORAGE_KEY,
   CUSTOM_FIELD_STORAGE_KEY,

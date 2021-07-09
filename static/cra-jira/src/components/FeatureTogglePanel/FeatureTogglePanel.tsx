@@ -1,7 +1,7 @@
 import { invoke } from '@forge/bridge';
 import { useEffect, useState } from 'react';
 import ConditionallyRender from 'react-conditionally-render';
-import FeatureToggleResolver from '../FeatureToggleResolver/FeatureToggleResolver';
+import ConnectToggleActions from '../ConnectToggleActions/ConnectToggleActions';
 
 interface IFeatureTogglePanelProps {
     toggleName: string;
@@ -26,20 +26,30 @@ export interface IFeatureToggle {
 }
 
 const FeatureTogglePanel = ({
-                                toggleName,
-                                issueKey,
-                            }: IFeatureTogglePanelProps) => {
-    const [uiConfig, setUiConfig] = useState<IUiConfig>({ featureTypes: [], projects: [] });
-    const [feature, setFeature] = useState<IFeatureToggle>({enabled: false, found: false, archived: false, errors: false});
+    toggleName,
+    issueKey,
+}: IFeatureTogglePanelProps) => {
+    const [uiConfig, setUiConfig] = useState<IUiConfig>({
+        featureTypes: [],
+        projects: [],
+    });
+    const [feature, setFeature] = useState<IFeatureToggle>({
+        enabled: false,
+        found: false,
+        archived: false,
+        errors: false,
+    });
 
     useEffect(() => {
         const getData = async () => {
-            await invoke<IFeatureToggle>('fetchFeatureToggle', {toggleName}).then(setFeature);
-        }
+            await invoke<IFeatureToggle>('fetchFeatureToggle', {
+                toggleName,
+            }).then(setFeature);
+        };
         if (toggleName) {
             getData();
         }
-    }, [toggleName])
+    }, [toggleName]);
     useEffect(() => {
         const getData = async () => {
             await invoke<IUiConfig>('fetchUiConfig').then(setUiConfig);
@@ -52,11 +62,14 @@ const FeatureTogglePanel = ({
             <ConditionallyRender
                 condition={Boolean(feature.errors)}
                 show={<div>Some error here</div>}
-                elseShow={<FeatureToggleResolver setFeature={setFeature}
-                                                 toggleName={toggleName} issueKey={issueKey}
-                                                 archived={feature.archived}
-                                                 enabled={feature.enabled} found={feature.found}
-                                                 uiConfig={uiConfig}></FeatureToggleResolver>}
+                elseShow={
+                    <ConnectToggleActions
+                        uiConfig={uiConfig}
+                        setFeature={setFeature}
+                        toggleName={toggleName}
+                        enabled={feature.enabled}
+                    />
+                }
             />
         </>
     );
