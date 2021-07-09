@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "lint": "./node_modules/.bin/eslint src/**/* || npm run --silent hook-errors",
-    "hook-errors": "echo '\\x1b[31mThe build failed because a Forge UI hook is being used incorrectly. Forge UI hooks follow the same rules as React Hooks but have their own API definitions. See the Forge documentation for details on how to use Forge UI hooks.\n' && exit 1"
+    "hook-errors": "echo '\\x1b[31mThe build failed because a Forge UI hook is being used incorrectly. Forge UI hooks follow the same rules as React Hooks but have their own API definitions. See the Forge documentation for details on how to use Forge UI hooks.\n' && exit 1",
+    "deploy": "cd ./static/cra-jira && yarn build && cd .. && cd .. && forge deploy"
   },
   "devDependencies": {
     "eslint": "^7.11.0",
