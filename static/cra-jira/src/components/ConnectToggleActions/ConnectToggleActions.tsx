@@ -52,15 +52,18 @@ const ConnectToggleActions = ({
           />
         }
       />
-      {/*
-            <ConditionallyRender condition={existingToggle}
-                                 show={<LinkExistingToggle
-                                     uiConfig={uiConfig}
-                                     issueKey={issueKey}
-                                     toggleName={toggleName}
-                                     setFeature={setFeature}
-                                 />}/>
-*/}
+
+      <ConditionallyRender
+        condition={existingToggle}
+        show={
+          <LinkExistingToggle
+            uiConfig={uiConfig}
+            issueKey={issueKey}
+            toggleName={toggleName}
+            setFeature={setFeature}
+          />
+        }
+      />
     </>
   );
 };
