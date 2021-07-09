@@ -9766,10 +9766,10 @@ react-clientside-effect@^1.2.0:
   dependencies:
     "@babel/runtime" "^7.12.13"
 
-react-conditionally-render@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/react-conditionally-render/-/react-conditionally-render-1.0.1.tgz#6ff227673d5e82a7972cc1b16c2a939db4989099"
-  integrity sha512-YEjeMBvSv6GIsPV2cxS4u9FLHzloAj/LwgU2ccRmSRi4Nx7xvArhjZkNXA0YYVt9gwSIlrHzRzYRexlb1Cytug==
+react-conditionally-render@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-conditionally-render/-/react-conditionally-render-1.0.2.tgz#9ff3c3fb6b76c1cfaae64429285fa99c6d275fb5"
+  integrity sha512-CtjIgaLHVDSgHis3gv/PT/8EnD6GPUL8PrhUjh7DP6S5Y3p56dGu7y2nVg6pYv1kv+fGznRhRmX3assr/vRw3A==
 
 react-dev-utils@^11.0.3:
   version "11.0.4"

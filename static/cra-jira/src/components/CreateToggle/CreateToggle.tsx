@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
 import {
   IFeatureToggle,
   IUiConfig,
@@ -11,6 +11,7 @@ import TextArea from '@atlaskit/textarea';
 import Button from '@atlaskit/button';
 
 import styles from './CreateToggle.module.css';
+import { invoke } from '@forge/bridge';
 
 export interface CreateToggleProps {
   uiConfig: IUiConfig;
@@ -40,20 +41,23 @@ const CreateToggle = ({
     label: featureType.name,
     value: featureType.id,
   }));
+
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    try {
+      invoke('createFeatureToggle', { toggleData: formData });
+      toggleCreateModal();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
-    <>
-      <h3>Create feature toggle</h3>
-      <p>The feature toggle for {issueKey} does not exist.</p>
-      <form
-        className={styles.form}
-        onSubmit={(event) => {
-          event.preventDefault();
-          console.log(formData);
-          toggleCreateModal();
-        }}
-      >
+    <div>
+      <h3 className={styles.formTitle}>Create feature toggle</h3>
+      <form className={styles.form} onSubmit={onSubmit}>
         <label className={styles.label}>
-          Project
+          <span className={styles.labelText}>Project</span>
           <Select
             placeholder='Feature type'
             name='project'
@@ -68,7 +72,7 @@ const CreateToggle = ({
         </label>
 
         <label className={styles.label}>
-          Toggle type
+          <span className={styles.labelText}>Toggle type</span>
           <Select
             placeholder={'Toggle type'}
             name='type'
@@ -81,33 +85,46 @@ const CreateToggle = ({
             }}
           />
         </label>
-        <label htmlFor='enabled'>Enable/Disable toggle</label>
-        <Toggle
-          label='Enable feature'
-          size='large'
-          name='enabled'
-          isChecked={formData.enabled}
-          onChange={(toggleData) => {
-            setFormData({
-              ...formData,
-              enabled: toggleData.target.checked,
-            });
-          }}
-        />
-        <Textfield
-          label='Toggle name'
-          name='name'
-          isRequired={true}
-          onChange={(nameChange) => {
-            setFormData({
-              ...formData,
-              name: nameChange.currentTarget.value,
-            });
-          }}
-        />
+
+        <label className={styles.label}>
+          <span className={styles.labelText}>Toggle status</span>
+
+          <div className={styles.toggleContainer}>
+            <Toggle
+              label='Enable feature'
+              size='large'
+              name='enabled'
+              isChecked={formData.enabled}
+              onChange={(toggleData) => {
+                setFormData({
+                  ...formData,
+                  enabled: toggleData.target.checked,
+                });
+              }}
+            />
+            <span>
+              Toggle is {formData.enabled ? 'enabled' : 'disabled'}
+            </span>
+          </div>
+        </label>
+        <label className={styles.label}>
+          <span className={styles.labelText}>Toggle name</span>
+          <Textfield
+            label='Toggle name'
+            name='name'
+            isRequired={true}
+            onChange={(nameChange) => {
+              setFormData({
+                ...formData,
+                name: nameChange.currentTarget.value,
+              });
+            }}
+          />
+        </label>
+
         <TextArea
           name='description'
-          placeholder={`If you'd like to add a description do so here`}
+          placeholder={`Add optional feature toggle description`}
           onChange={(descriptionChange) => {
             setFormData({
               ...formData,
@@ -115,9 +132,14 @@ const CreateToggle = ({
             });
           }}
         />
-        <Button type='submit' value='Create toggle' />
+        <div className={styles.buttonContainer}>
+          <Button onClick={toggleCreateModal}>Cancel</Button>
+          <Button appearance='primary' type='submit'>
+            Create feature toggle
+          </Button>
+        </div>
       </form>
-    </>
+    </div>
   );
 };
 
