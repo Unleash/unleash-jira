@@ -34,6 +34,8 @@ const getProjectUrl = async () => await getApiUrl('/api/admin/projects');
 const bootstrapUrl = async () =>
   await getApiUrl('/api/admin/ui-bootstrap');
 
+const featuresUrl = async () => await getApiUrl('/api/client/features');
+
 const getApiKey = async () => {
   return await storage.get(API_KEY_STORAGE_KEY);
 };
@@ -140,6 +142,19 @@ const fetchUiBootstrap = async () => {
   }
 };
 
+const fetchFeatureNames = async () => {
+  const unleashApiKey = await getApiKey();
+  const data = await api.fetch(await featuresUrl(), {
+    headers: { Authorization: unleashApiKey },
+  });
+  if (data.ok) {
+    const json = await data.json();
+    return {
+      featureNames: json.features.map(feature => feature.name)
+    };
+  }
+}
+
 export const unleash = {
   fetchFeatureToggle,
   createFeatureToggle,
@@ -156,4 +171,5 @@ export const unleash = {
   API_KEY_STORAGE_KEY,
   API_URL_STORAGE_KEY,
   CUSTOM_FIELD_STORAGE_KEY,
+  fetchFeatureNames,
 };

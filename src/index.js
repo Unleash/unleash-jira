@@ -27,6 +27,10 @@ resolver.define('fetchFeatureToggle', ({ payload }) => {
   return unleash.fetchFeatureToggle(toggleName);
 });
 
+resolver.define('fetchFeatureNames', () => {
+  return unleash.fetchFeatureNames();
+})
+
 
 resolver.define('getFrontendFeatureUrl', ({ payload }) => {
   const { toggleName } = payload;

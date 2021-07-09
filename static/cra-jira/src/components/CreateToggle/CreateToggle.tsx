@@ -1,6 +1,5 @@
 import { IFeatureToggle, IUiConfig } from "../FeatureTogglePanel/FeatureTogglePanel";
 import { Dispatch, SetStateAction, useState } from "react";
-import Form from "@atlaskit/form";
 import Select from '@atlaskit/select';
 import Toggle from "@atlaskit/toggle";
 import Textfield from '@atlaskit/textfield';

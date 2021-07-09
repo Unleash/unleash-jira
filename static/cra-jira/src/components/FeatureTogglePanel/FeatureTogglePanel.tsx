@@ -1,7 +1,7 @@
 import { invoke } from '@forge/bridge';
 import { useEffect, useState } from 'react';
 import ConditionallyRender from 'react-conditionally-render';
-import FeatureToggleResolver from "../FeatureToggleResolver/FeatureToggleResolver";
+import FeatureToggleResolver from '../FeatureToggleResolver/FeatureToggleResolver';
 
 interface IFeatureTogglePanelProps {
     toggleName: string;
