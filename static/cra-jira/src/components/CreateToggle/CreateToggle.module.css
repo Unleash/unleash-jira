@@ -1,0 +1,12 @@
+.form {
+  max-width: 400px;
+}
+
+.form > * {
+  margin: 1rem 0;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+}
